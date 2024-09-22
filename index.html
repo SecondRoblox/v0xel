@@ -3,15 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>v0xel</title>
+    <title>Cool Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        header nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Google Custom Search Element -->
-    <div class="gcse-search"></div>
+<header>
+    <nav>
+        <a href="#" id="aboutLink">About Us</a>
+        <a href="#" id="explanationLink">Explanation</a>
+        <a href="#" id="launchLink">Launch</a>
+    </nav>
+</header>
 
-    <!-- Load Google CSE script -->
-    <script async src="https://cse.google.com/cse.js?cx=d2b819975af8b46c8"></script>
+<div id="content">
+    <!-- About Us content -->
+    <div id="aboutPage">
+        <h1>About Us</h1>
+        <p>Welcome to our cool website! We're dedicated to providing innovative solutions that enhance the user experience. Stay tuned for more updates and exciting features!</p>
+    </div>
+
+    <!-- Explanation content -->
+    <div id="explanationPage" class="hidden">
+        <h1>Explanation</h1>
+        <p>This site features a custom search engine that you can launch by clicking the "Launch" button in the navigation bar. It's built with HTML and JavaScript to provide instant content loading.</p>
+    </div>
+
+    <!-- Launch content (Google Custom Search) -->
+    <div id="launchPage" class="hidden">
+        <!-- Google Custom Search Element -->
+        <div class="gcse-search"></div>
+        <!-- Load Google CSE script -->
+        <script async src="https://cse.google.com/cse.js?cx=d2b819975af8b46c8"></script>
+    </div>
+</div>
+
+<script>
+    // Function to switch between pages
+    function switchPage(pageId) {
+        // Hide all pages
+        document.getElementById('aboutPage').classList.add('hidden');
+        document.getElementById('explanationPage').classList.add('hidden');
+        document.getElementById('launchPage').classList.add('hidden');
+
+        // Show the selected page
+        document.getElementById(pageId).classList.remove('hidden');
+    }
+
+    // Event listeners for navigation
+    document.getElementById('aboutLink').addEventListener('click', function() {
+        switchPage('aboutPage');
+    });
+    document.getElementById('explanationLink').addEventListener('click', function() {
+        switchPage('explanationPage');
+    });
+    document.getElementById('launchLink').addEventListener('click', function() {
+        switchPage('launchPage');
+    });
+</script>
 
 </body>
 </html>
