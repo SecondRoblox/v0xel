@@ -49,6 +49,69 @@
         .hidden {
             display: none;
         }
+        /* Private Browser Styles */
+        #privateBrowserContent {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        #header {
+            background-color: #333;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #addressBar {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        #goButton {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #goButton:hover {
+            background-color: #45a049;
+        }
+        #webView {
+            width: 100%;
+            height: calc(100vh - 60px);
+            border: none;
+            background-color: #fff;
+        }
+        #privateModeToggle {
+            color: white;
+            background-color: #555;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #privateModeToggle.active {
+            background-color: #222;
+            border: 2px solid #f44336;
+        }
+        @media (max-width: 600px) {
+            #addressBar {
+                width: 70%;
+            }
+            #goButton {
+                padding: 8px;
+                font-size: 14px;
+            }
+            #privateModeToggle {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -58,6 +121,7 @@
         <a href="#" id="aboutLink">About Us</a>
         <a href="#" id="explanationLink">Explanation</a>
         <a href="#" id="launchLink">Launch</a>
+        <a href="#" id="privateBrowserLink">Private Browser</a>
     </nav>
 </header>
 
@@ -76,10 +140,20 @@
 
     <!-- Launch content (Google Custom Search) -->
     <div id="launchPage" class="hidden">
-        <!-- Google Custom Search Element -->
         <div class="gcse-search"></div>
-        <!-- Load Google CSE script -->
         <script async src="https://cse.google.com/cse.js?cx=d2b819975af8b46c8"></script>
+    </div>
+
+    <!-- Private Browser content -->
+    <div id="privateBrowserPage" class="hidden">
+        <!-- Header with search bar -->
+        <div id="header">
+            <input type="text" id="addressBar" placeholder="Enter URL here..." value="https://example.com">
+            <button id="goButton">Go</button>
+            <button id="privateModeToggle">Private Mode</button>
+        </div>
+        <!-- Webpage view in iframe -->
+        <iframe id="webView" src="https://example.com" sandbox="allow-scripts allow-same-origin"></iframe>
     </div>
 </div>
 
@@ -90,6 +164,7 @@
         document.getElementById('aboutPage').classList.add('hidden');
         document.getElementById('explanationPage').classList.add('hidden');
         document.getElementById('launchPage').classList.add('hidden');
+        document.getElementById('privateBrowserPage').classList.add('hidden');
 
         // Show the selected page
         document.getElementById(pageId).classList.remove('hidden');
@@ -105,6 +180,65 @@
     document.getElementById('launchLink').addEventListener('click', function() {
         switchPage('launchPage');
     });
+    document.getElementById('privateBrowserLink').addEventListener('click', function() {
+        switchPage('privateBrowserPage');
+    });
+
+    // Private Browser Script
+    const addressBar = document.getElementById('addressBar');
+    const goButton = document.getElementById('goButton');
+    const webView = document.getElementById('webView');
+    const privateModeToggle = document.getElementById('privateModeToggle');
+    let privateMode = false;
+
+    // Navigate to the URL when Go button is clicked or Enter key is pressed
+    goButton.addEventListener('click', navigateToURL);
+    addressBar.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            navigateToURL();
+        }
+    });
+
+    function navigateToURL() {
+        let url = addressBar.value;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url;
+        }
+        webView.src = url;
+    }
+
+    // Toggle Private Mode
+    privateModeToggle.addEventListener('click', () => {
+        privateMode = !privateMode;
+        if (privateMode) {
+            privateModeToggle.classList.add('active');
+            privateModeToggle.innerHTML = 'Private Mode ON';
+            document.cookie = '';
+            localStorage.clear();
+            sessionStorage.clear();
+            webView.srcdoc = `
+                <html>
+                    <body style="background-color: #111; color: #fff; text-align: center;">
+                        <h1>Private Mode is ON</h1>
+                        <p>This browser doesn't store history or cookies.</p>
+                    </body>
+                </html>`;
+        } else {
+            privateModeToggle.classList.remove('active');
+            privateModeToggle.innerHTML = 'Private Mode';
+            navigateToURL();
+        }
+    });
+
+    webView.onerror = () => {
+        webView.srcdoc = `
+            <html>
+                <body style="text-align: center; color: red;">
+                    <h1>Failed to Load Page</h1>
+                    <p>Please check the URL and try again.</p>
+                </body>
+            </html>`;
+    };
 </script>
 
 </body>
