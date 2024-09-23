@@ -22,8 +22,19 @@
             text-decoration: none;
             font-weight: bold;
         }
+        #topBar {
+            background-color: #333;
+            color: white;
+            position: fixed;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            top: 0;
+            z-index: 1000;
+        }
         #content {
-            padding: 20px;
+            padding: 60px 20px; /* To avoid the top bar overlapping */
             max-width: 800px;
             margin: 20px auto;
             background-color: #fff;
@@ -116,6 +127,11 @@
 </head>
 <body>
 
+<!-- Top bar for Time and Date -->
+<div id="topBar">
+    <span id="timeDateDisplay"></span>
+</div>
+
 <header>
     <nav>
         <a href="#" id="aboutLink">Welcome</a>
@@ -158,6 +174,22 @@
 </div>
 
 <script>
+    // Function to display and update the time and date every second
+    function updateTimeDate() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        const strTime = hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + ampm;
+        const strDate = now.toLocaleDateString();
+        document.getElementById('timeDateDisplay').innerHTML = strDate + ' ' + strTime;
+    }
+
+    // Update time and date every second
+    setInterval(updateTimeDate, 1000);
+
     // Function to switch between pages
     function switchPage(pageId) {
         // Hide all pages
@@ -239,21 +271,6 @@
                 </body>
             </html>`;
     };
-
-    // Custom Search Result Handling
-    document.addEventListener("DOMContentLoaded", function() {
-        document.addEventListener('click', function(event) {
-            const searchResult = event.target.closest('.gsc-result a');
-            if (searchResult) {
-                event.preventDefault();
-                const url = searchResult.href;
-                switchPage('privateBrowserPage');
-                addressBar.value = url;
-                webView.src = url;
-            }
-        });
-    });
-
 </script>
 
 </body>
