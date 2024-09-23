@@ -239,6 +239,21 @@
                 </body>
             </html>`;
     };
+
+    // Custom Search Result Handling
+    document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener('click', function(event) {
+            const searchResult = event.target.closest('.gsc-result a');
+            if (searchResult) {
+                event.preventDefault();
+                const url = searchResult.href;
+                switchPage('privateBrowserPage');
+                addressBar.value = url;
+                webView.src = url;
+            }
+        });
+    });
+
 </script>
 
 </body>
